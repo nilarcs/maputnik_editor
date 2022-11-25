@@ -45,7 +45,7 @@ export default class FieldFont extends React.Component {
       >
         <FieldAutocomplete
           value={value}
-          options={this.props.fonts.map(f => [f, f])}
+          options={(Array.isArray(this.props.fonts) ? this.props.fonts : []).map(f => [f, f])}
           onChange={this.changeFont.bind(this, i)}
         />
       </li>
