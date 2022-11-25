@@ -1,8 +1,12 @@
 FROM node:10 as builder
 WORKDIR /maputnik
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    apt-get update && apt-get install -y --no-install-recommends \
+        apt-transport-https && \
+    rm -rf /var/lib/apt/lists/*
 
 # Only copy package.json to prevent npm install from running on every build
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm install
 
 # Build maputnik
