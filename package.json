@@ -5,7 +5,7 @@
   "main": "''",
   "scripts": {
     "stats": "webpack --config config/webpack.production.config.js --progress=profile --json > stats.json",
-    "build": "webpack --config config/webpack.production.config.js --progress=profile --color",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && webpack --config config/webpack.production.config.js --progress=profile --color",
     "profiling-build": "webpack --config config/webpack.profiling.config.js --progress=profile --color",
     "test": "cross-env NODE_ENV=test wdio config/wdio.conf.js",
     "test-watch": "cross-env NODE_ENV=test wdio config/wdio.conf.js --watch",
