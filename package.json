@@ -38,7 +38,6 @@
     "file-saver": "^2.0.5",
     "json-stringify-pretty-compact": "^3.0.0",
     "json-to-ast": "^2.1.0",
-    "jsonlint": "https://github.com/josdejong/jsonlint.git",
     "lodash": "^4.17.21",
     "lodash.capitalize": "^4.2.1",
     "lodash.clamp": "^4.0.3",

@@ -1,20 +1,19 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import classnames from 'classnames';
+import React from "react";
+import PropTypes from "prop-types";
+import classnames from "classnames";
 
-import Block from './Block'
-import FieldString from './FieldString'
-import CodeMirror from 'codemirror';
+import Block from "./Block";
+import FieldString from "./FieldString";
+import CodeMirror from "codemirror";
 
-import 'codemirror/mode/javascript/javascript'
-import 'codemirror/addon/lint/lint'
-import 'codemirror/addon/edit/matchbrackets'
-import 'codemirror/lib/codemirror.css'
-import 'codemirror/addon/lint/lint.css'
-import jsonlint from 'jsonlint'
-import stringifyPretty from 'json-stringify-pretty-compact'
-import '../util/codemirror-mgl';
-
+import "codemirror/mode/javascript/javascript";
+import "codemirror/addon/lint/lint";
+import "codemirror/addon/edit/matchbrackets";
+import "codemirror/lib/codemirror.css";
+import "codemirror/addon/lint/lint.css";
+// import jsonlint from 'jsonlint'
+import stringifyPretty from "json-stringify-pretty-compact";
+import "../util/codemirror-mgl";
 
 export default class InputJson extends React.Component {
   static propTypes = {
@@ -31,24 +30,21 @@ export default class InputJson extends React.Component {
     onJSONValid: PropTypes.func,
     onJSONInvalid: PropTypes.func,
     mode: PropTypes.object,
-    lint: PropTypes.oneOfType([
-      PropTypes.bool,
-      PropTypes.object,
-    ]),
-  }
+    lint: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
+  };
 
   static defaultProps = {
     lineNumbers: true,
     lineWrapping: false,
     gutters: ["CodeMirror-lint-markers"],
     getValue: (data) => {
-      return stringifyPretty(data, {indent: 2, maxLength: 40});
+      return stringifyPretty(data, { indent: 2, maxLength: 40 });
     },
     onFocus: () => {},
     onBlur: () => {},
     onJSONInvalid: () => {},
     onJSONValid: () => {},
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -60,7 +56,7 @@ export default class InputJson extends React.Component {
     };
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this._doc = CodeMirror(this._el, {
       value: this.props.getValue(this.props.layer),
       mode: this.props.mode || {
@@ -68,33 +64,33 @@ export default class InputJson extends React.Component {
       },
       lineWrapping: this.props.lineWrapping,
       tabSize: 2,
-      theme: 'maputnik',
+      theme: "maputnik",
       viewportMargin: Infinity,
       lineNumbers: this.props.lineNumbers,
       lint: this.props.lint || {
-        context: "layer"
+        context: "layer",
       },
       matchBrackets: true,
       gutters: this.props.gutters,
       scrollbarStyle: "null",
     });
 
-    this._doc.on('change', this.onChange);
-    this._doc.on('focus', this.onFocus);
-    this._doc.on('blur', this.onBlur);
+    this._doc.on("change", this.onChange);
+    this._doc.on("focus", this.onFocus);
+    this._doc.on("blur", this.onBlur);
   }
 
   onPointerDown = (cm, e) => {
     this._keyEvent = "pointer";
-  }
+  };
 
   onFocus = (cm, e) => {
     this.props.onFocus();
     this.setState({
       isEditing: true,
-      showMessage: (this._keyEvent === "keyboard"),
+      showMessage: this._keyEvent === "keyboard",
     });
-  }
+  };
 
   onBlur = () => {
     this._keyEvent = "keyboard";
@@ -103,20 +99,18 @@ export default class InputJson extends React.Component {
       isEditing: false,
       showMessage: false,
     });
-  }
+  };
 
-  componentWillUnMount () {
-    this._doc.off('change', this.onChange);
-    this._doc.off('focus', this.onFocus);
-    this._doc.off('blur', this.onBlur);
+  componentWillUnMount() {
+    this._doc.off("change", this.onChange);
+    this._doc.off("focus", this.onFocus);
+    this._doc.off("blur", this.onBlur);
   }
 
   componentDidUpdate(prevProps) {
     if (!this.state.isEditing && prevProps.layer !== this.props.layer) {
       this._cancelNextChange = true;
-      this._doc.setValue(
-        this.props.getValue(this.props.layer),
-      )
+      this._doc.setValue(this.props.getValue(this.props.layer));
     }
   }
 
@@ -125,7 +119,7 @@ export default class InputJson extends React.Component {
       this._cancelNextChange = false;
       this.setState({
         prevValue: this._doc.getValue(),
-      })
+      });
       return;
     }
     const newCode = this._doc.getValue();
@@ -134,16 +128,15 @@ export default class InputJson extends React.Component {
       let parsedLayer, err;
       try {
         parsedLayer = JSON.parse(newCode);
-      } catch(_err) {
+      } catch (_err) {
         err = _err;
-        console.warn(_err)
+        console.warn(_err);
       }
 
       if (err) {
         this.props.onJSONInvalid();
-      }
-      else {
-        this.props.onChange(parsedLayer)
+      } else {
+        this.props.onChange(parsedLayer);
         this.props.onJSONValid();
       }
     }
@@ -151,24 +144,34 @@ export default class InputJson extends React.Component {
     this.setState({
       prevValue: newCode,
     });
-  }
+  };
 
   render() {
-    const {showMessage} = this.state;
+    const { showMessage } = this.state;
     const style = {};
     if (this.props.maxHeight) {
       style.maxHeight = this.props.maxHeight;
     }
 
-    return <div className="JSONEditor" onPointerDown={this.onPointerDown} aria-hidden="true">
-      <div className={classnames("JSONEditor__message", {"JSONEditor__message--on": showMessage})}>
-        Press <kbd>ESC</kbd> to lose focus
-      </div>
+    return (
       <div
-        className={classnames("codemirror-container", this.props.className)}
-        ref={(el) => this._el = el}
-        style={style}
-      />
-    </div>
+        className="JSONEditor"
+        onPointerDown={this.onPointerDown}
+        aria-hidden="true"
+      >
+        <div
+          className={classnames("JSONEditor__message", {
+            "JSONEditor__message--on": showMessage,
+          })}
+        >
+          Press <kbd>ESC</kbd> to lose focus
+        </div>
+        <div
+          className={classnames("codemirror-container", this.props.className)}
+          ref={(el) => (this._el = el)}
+          style={style}
+        />
+      </div>
+    );
   }
 }

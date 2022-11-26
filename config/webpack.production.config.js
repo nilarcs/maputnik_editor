@@ -18,7 +18,7 @@ module.exports = {
   },
   output: {
     path: OUTPATH,
-    filename: "[name].[hash].js",
+    filename: "[name].[contenthash].js",
     chunkFilename: "[contenthash].js",
   },
   resolve: {
@@ -29,6 +29,8 @@ module.exports = {
     rules: rules,
   },
   node: {
+    file: "empty",
+    system: "empty",
     fs: "empty",
     net: "empty",
     tls: "empty",
